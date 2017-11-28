@@ -46,7 +46,6 @@ public class TestFilterControllerTest {
      */
     @Test
     public void test_args() throws Exception {
-
         this.mockMvc.perform(get("/say"))
                 .andDo(print())
                 .andExpect(content().string("success"));
