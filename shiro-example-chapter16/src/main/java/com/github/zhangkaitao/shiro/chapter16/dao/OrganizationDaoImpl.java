@@ -29,7 +29,7 @@ public class OrganizationDaoImpl implements OrganizationDao {
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
-
+            @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                 PreparedStatement psst = connection.prepareStatement(sql, new String[]{"id"});
                 int count = 1;
@@ -44,6 +44,7 @@ public class OrganizationDaoImpl implements OrganizationDao {
         return organization;
     }
 
+    @Override
     public Organization updateOrganization(Organization organization) {
         final String sql = "update sys_organization set name=?, parent_id=?, parent_ids=?, available=? where id=?";
         jdbcTemplate.update(
@@ -61,6 +62,7 @@ public class OrganizationDaoImpl implements OrganizationDao {
     }
 
 
+    @Override
     public Organization findOne(Long organizationId) {
         final String sql = "select id, name, parent_id, parent_ids, available from sys_organization where id=?";
         List<Organization> organizationList = jdbcTemplate.query(sql, new BeanPropertyRowMapper(Organization.class), organizationId);
@@ -70,18 +72,20 @@ public class OrganizationDaoImpl implements OrganizationDao {
         return organizationList.get(0);
     }
 
+    @Override
     public List<Organization> findAll() {
         final String sql = "select id, name, parent_id, parent_ids, available from sys_organization";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper(Organization.class));
     }
 
+    @Override
     public List<Organization> findAllWithExclude(Organization excludeOraganization) {
         //TODO 改成not exists 利用索引
         final String sql = "select id, name, parent_id, parent_ids, available from sys_organization where id!=? and parent_ids not like ?";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper(Organization.class), excludeOraganization.getId(), excludeOraganization.makeSelfAsParentIds() + "%");
     }
 
-
+    @Override
     public void move(Organization source, Organization target) {
         String moveSourceSql = "update sys_organization set parent_id=?,parent_ids=? where id=?";
         jdbcTemplate.update(moveSourceSql, target.getId(), target.getParentIds(), source.getId());
