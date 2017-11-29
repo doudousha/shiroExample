@@ -4,7 +4,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:spring-config.xml",
         "classpath:spring-mvc.xml"
 })
-//
+@TestPropertySource(properties = {"test.holder=true"})
 public class TestFilterControllerTest {
 
     @Autowired
@@ -31,10 +33,12 @@ public class TestFilterControllerTest {
 
     private MockMvc mockMvc;
 
+
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                 .addFilter((Filter) wac.getBean("shiroFilter")).build();
+
     }
 
     /**
@@ -46,7 +50,6 @@ public class TestFilterControllerTest {
      */
     @Test
     public void test_args() throws Exception {
-
         this.mockMvc.perform(get("/say"))
                 .andDo(print())
                 .andExpect(content().string("success"));

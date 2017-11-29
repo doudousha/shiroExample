@@ -5,6 +5,7 @@ import com.github.zhangkaitao.shiro.chapter16.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.web.filter.PathMatchingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -19,13 +20,21 @@ public class SysUserFilter extends PathMatchingFilter {
     @Autowired
     private UserService userService;
 
+    @Value("${test.holder}")
+    private boolean testHolder;
+
     @Override
     protected boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
 
         String username = (String)SecurityUtils.getSubject().getPrincipal();
-       // request.setAttribute(Constants.CURRENT_USER, userService.findByUsername(username));
 
-        request.setAttribute(Constants.CURRENT_USER, "success");
+
+        if(testHolder) {
+            request.setAttribute(Constants.CURRENT_USER, "success");
+        }else {
+            request.setAttribute(Constants.CURRENT_USER, userService.findByUsername(username));
+        }
+
         System.out.println("onPrehandler");
         return true;
     }
