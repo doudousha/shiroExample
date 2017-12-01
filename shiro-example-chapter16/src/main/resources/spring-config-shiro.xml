@@ -117,7 +117,8 @@
                 /login = authc
                 /logout = logout
                 /authenticated = authc
-                /say = sysUser
+                /shiro/view = sysUser
+                /shiro/add = user
                 /** = user,sysUser
             </value>
         </property>

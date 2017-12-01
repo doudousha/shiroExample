@@ -9,10 +9,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class AController {
 
-    @RequestMapping("/say")
+    @RequestMapping("/shiro/view")
     @ResponseBody
-    public String say(@CurrentUser String name) {
+    public String view(@CurrentUser String name) {
         System.out.println("say");
         return name ;
     }
+
+
+
+    @RequestMapping("/shiro/add")
+    @ResponseBody
+    public String view() {
+        return "success";
+    }
+
+
+
 }
